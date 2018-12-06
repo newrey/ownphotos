@@ -104,8 +104,10 @@ CORS_ALLOW_HEADERS = (
 )
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-    '192.168.1.100:3000',
+    # 'localhost:3000',
+    # '192.168.1.100:3000',
+    # os.environ.get('FRONTEND_HOST') + ":5000",
+    '*'
 )
 
 REST_FRAMEWORK = {
