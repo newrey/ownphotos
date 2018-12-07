@@ -25,5 +25,5 @@ EOF
     echo "Running backend server..."
 
     python manage.py rqworker default 2>&1 | tee logs/rqworker.log &
-    gunicorn --bind 0.0.0.0:"$BACKEND_HOST_PORT" ownphotos.wsgi 2>&1 | tee logs/gunicorn.log
+    gunicorn --bind 0.0.0.0:8001 ownphotos.wsgi 2>&1 | tee logs/gunicorn.log
 fi
