@@ -48,24 +48,26 @@ RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
 
-RUN /venv/bin/pip install http://download.pytorch.org/whl/cpu/torch-0.4.0-cp35-cp35m-linux_x86_64.whl && /venv/bin/pip install torchvision
+# RUN /venv/bin/pip install http://download.pytorch.org/whl/cpu/torch-0.4.0-cp35-cp35m-linux_x86_64.whl && /venv/bin/pip install torchvision
+RUN /venv/bin/pip install https://newrey.myqnapcloud.com:8081/bin/torch-0.4.0-cp35-cp35m-linux_x86_64.whl && /venv/bin/pip install torchvision
 
-RUN /venv/bin/pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz
+# RUN /venv/bin/pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.0.0/en_core_web_sm-2.0.0.tar.gz
+RUN /venv/bin/pip install https://newrey.myqnapcloud.com:8081/bin/en_core_web_sm-2.0.0.tar.gz
 RUN LC_CTYPE="C.UTF-8" /venv/bin/pip install -r requirements.txt
 
 RUN /venv/bin/python -m spacy download en_core_web_sm
 
 WORKDIR /code/api/places365
 # RUN wget https://s3.eu-central-1.amazonaws.com/ownphotos-deploy/places365_model.tar.gz
-RUN wget https://github.com/newrey/gphoto/raw/rey/modules/places365_model.tar.gz
+RUN wget https://newrey.myqnapcloud.com:8081/bin/places365_model.tar.gz
 RUN tar xf places365_model.tar.gz
 
 WORKDIR /code/api/im2txt
 # RUN wget https://s3.eu-central-1.amazonaws.com/ownphotos-deploy/im2txt_model.tar.gz
-RUN wget https://github.com/newrey/gphoto/raw/rey/modules/im2txt_model.tar.gz
+RUN wget https://newrey.myqnapcloud.com:8081/bin/im2txt_model.tar.gz
 RUN tar xf im2txt_model.tar.gz
 # RUN wget https://s3.eu-central-1.amazonaws.com/ownphotos-deploy/im2txt_data.tar.gz
-RUN wget https://github.com/newrey/gphoto/raw/rey/modules/im2txt_data.tar.gz
+RUN wget https://newrey.myqnapcloud.com:8081/bin/im2txt_data.tar.gz
 RUN tar xf im2txt_data.tar.gz
 
 
@@ -73,19 +75,19 @@ WORKDIR /
 
 
 
-RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh 
-RUN bash nodesource_setup.sh
-RUN apt-get install nodejs
+# RUN curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh 
+# RUN bash nodesource_setup.sh
+# RUN apt-get install nodejs
 
-RUN rm -rf /var/lib/apt/lists/*
-RUN npm config set registry https://registry.npm.taobao.org
-WORKDIR /code
-RUN git clone https://github.com/hooram/ownphotos-frontend.git
-WORKDIR /code/ownphotos-frontend
-RUN git pull origin dev && git checkout dev
-RUN mv /code/ownphotos-frontend/src/api_client/apiClientDeploy.js /code/ownphotos-frontend/src/api_client/apiClient.js
-RUN npm install
-RUN npm install -g serve
+# RUN rm -rf /var/lib/apt/lists/*
+# RUN npm config set registry https://registry.npm.taobao.org
+# WORKDIR /code
+# RUN git clone https://github.com/hooram/ownphotos-frontend.git
+# WORKDIR /code/ownphotos-frontend
+# RUN git pull origin dev && git checkout dev
+# RUN mv /code/ownphotos-frontend/src/api_client/apiClientDeploy.js /code/ownphotos-frontend/src/api_client/apiClient.js
+# RUN npm install
+# RUN npm install -g serve
 
 RUN apt-get remove --purge -y cmake git && \
     rm -rf /var/lib/apt/lists/*
