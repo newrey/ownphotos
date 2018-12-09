@@ -1880,6 +1880,29 @@ class MediaAccessView(APIView):
                     return response
         return HttpResponse(status=404)
 
+#public to all @TODO security
+#use source photo  
+class MediaNoAccessView(APIView):
+    permission_classes = (AllowAny, )
+    
+    # @silk_profile(name='media')
+    def get(self, request, path, fname, format=None):
+        image_hash = fname.split(".")[0].split('_')[0]
+        try:
+            photo = Photo.objects.filter(image_hash=image_hash) \
+                    .only('public').first()
+        except Photo.DoesNotExist:
+            return HttpResponse(status=404)
+
+        response = HttpResponse()
+        if path != 'photos':
+            response['Content-Type'] = 'image/jpeg'
+            response['X-Accel-Redirect'] = "/protected_media/" + path + '/' + fname
+        else:
+            response['Content-Type'] = 'image/jpeg'
+            response['X-Accel-Redirect'] = photo.image_path
+
+        return response
 
 def media_access(request, path):
     # ipdb.set_trace()
