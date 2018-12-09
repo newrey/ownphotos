@@ -26,7 +26,8 @@ def scan_photos(user):
         started_at=datetime.datetime.now(),
         job_type=LongRunningJob.JOB_SCAN_PHOTOS)
     lrj.save()
-
+    added_photo_count = 0
+    util.logger.info('1')
     try:
 
         image_paths = []
@@ -35,20 +36,22 @@ def scan_photos(user):
         #         os.path.join(dp, f) for dp, dn, fn in os.walk(image_dir)
         #         for f in fn
         #     ])
-
+        util.logger.info('2')
         image_paths.extend([
             os.path.join(dp, f) for dp, dn, fn in os.walk(user.scan_directory)
             for f in fn
         ])
+        util.logger.info('3')
 
         image_paths = [
             p for p in image_paths
             if p.lower().endswith('.jpg') and 'thumb' not in p.lower()
         ]
+        util.logger.info('4')
         image_paths.sort()
-
+        util.logger.info('5')
         existing_hashes = [p.image_hash for p in Photo.objects.all()]
-
+        util.logger.info('6')
         image_paths_to_add = []
         for image_path in tqdm(image_paths):
             # hash_md5 = hashlib.md5()
@@ -58,15 +61,16 @@ def scan_photos(user):
             # image_hash = hash_md5.hexdigest()
             # if image_hash not in existing_hashes:
             #     image_paths_to_add.append(image_path)
-
+            util.logger.info('image_path'+image_path)
             if not Photo.objects.filter(image_path=image_path).exists():
+                util.logger.info('7')
                 # ipdb.set_trace()
                 image_paths_to_add.append(image_path)
-
-        added_photo_count = 0
+        util.logger.info('8')
         already_existing_photo = 0
         counter = 0
         for image_path in tqdm(image_paths_to_add):
+            util.logger.info('imagep:' + image_path)
             counter += 1
             if image_path.lower().endswith('.jpg'):
                 try:
