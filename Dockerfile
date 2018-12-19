@@ -132,5 +132,5 @@ COPY . /code
 RUN mv /code/config_docker.py /code/config.py
 
 WORKDIR /code
-
+ENV PYTHONIOENCODING utf-8
 ENTRYPOINT ./entrypoint.sh

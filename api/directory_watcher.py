@@ -1,4 +1,5 @@
 import os
+import sys
 import datetime
 import hashlib
 import pytz
@@ -27,7 +28,11 @@ def scan_photos(user):
         job_type=LongRunningJob.JOB_SCAN_PHOTOS)
     lrj.save()
     added_photo_count = 0
-    util.logger.info('1')
+
+    # import ptvsd
+    # ptvsd.enable_attach()
+    # ptvsd.wait_for_attach()  # blocks execution until debugger is attached
+    util.logger.info("stdout encoding.." + sys.stdout.encoding)
     try:
 
         image_paths = []
@@ -37,13 +42,13 @@ def scan_photos(user):
         #         for f in fn
         #     ])
         image_paths.extend([
-            os.path.join(dp, f) for dp, dn, fn in os.walk(user.scan_directory)
+            os.path.join(dp, f) for dp, dn, fn in os.walk(bytes(user.scan_directory,"utf-8"))
             for f in fn
         ])
 
         image_paths = [
-            p for p in image_paths
-            if p.lower().endswith('.jpg') and 'thumb' not in p.lower()
+            p.decode() for p in image_paths
+            if p.decode().lower().endswith('.jpg') and 'thumb' not in p.decode().lower()
         ]
         image_paths.sort()
         existing_hashes = [p.image_hash for p in Photo.objects.all()]
@@ -62,7 +67,7 @@ def scan_photos(user):
                     # ipdb.set_trace()
                     image_paths_to_add.append(image_path)
             except Exception as e:
-                util.logger.error("Could not load image：" + e)
+                util.logger.error("Could not load image.." + image_path)
 
         already_existing_photo = 0
         counter = 0
